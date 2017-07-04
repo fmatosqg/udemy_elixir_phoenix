@@ -7,4 +7,9 @@ defmodule Discuss.TopicControllerTest do
     assert html_response(conn, 200) =~ "New Topic Created"
   end
 
+  test "GET /topics/new?what=it", %{conn: conn} do
+    conn = get conn, "/topics/new?what=it"
+    assert html_response(conn, 200) =~ "New Topic Created"
+  end
+
 end
