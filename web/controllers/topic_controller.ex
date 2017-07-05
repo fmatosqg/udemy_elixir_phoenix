@@ -41,7 +41,8 @@ defmodule Discuss.TopicController do
     """
     def index(conn,_params) do
 
-        topics = Repo.all(Topic)
+        query = from(t in Topic, order_by: [desc: t.id], limit: 5)
+        topics = Repo.all(query)
 
         render conn, "index.html", topics: topics
 
