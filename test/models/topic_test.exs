@@ -15,7 +15,44 @@ defmodule Discuss.TopicTest do
 
 
         assert changeset.valid?
-        assert hooray == %{title: "Great"}
+        assert hooray == params
         assert errors == []
       end
+
+      test "Make error if title is empty" do
+        struct = %Discuss.Topic{}
+        params = %{title: ""}
+        changeset = Discuss.Topic.changeset(struct,params)
+
+        %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+
+        assert changeset.valid? == false
+        assert errors == [title: {"can't be blank", [validation: :required]}]
+
+      end
+
+      test "Make error if title is empty spaces" do
+        struct = %Discuss.Topic{}
+        params = %{title: "    "}
+        changeset = Discuss.Topic.changeset(struct,params)
+
+        %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+
+        assert changeset.valid? == false
+        assert errors == [title: {"can't be blank", [validation: :required]}]
+
+      end
+
+      test "Make error if params is nil, but no crash" do
+        struct = %Discuss.Topic{}
+        params = nil
+        changeset = Discuss.Topic.changeset(struct)
+
+        %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+
+        assert changeset.valid? == false
+        assert errors == [title: {"can't be blank", [validation: :required]}]
+
+      end
+
 end

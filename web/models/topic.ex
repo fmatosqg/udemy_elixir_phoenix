@@ -16,20 +16,28 @@ defmodule Discuss.Topic do
         struct represents a record from the database or
         that's going to be inserted
 
-        params represents the properties being updated and stuff
-        stuff
+        params represents the properties being updated
 
         ## Examples
             iex> struct = %Discuss.Topic{}
             iex> params = %{title: "Great"}
-            iex> changeset = Discuss.Topic.changeset(struct,params)
+            iex> _changeset = Discuss.Topic.changeset(struct,params)
             #Ecto.Changeset<action: nil, changes: %{title: "Great"}, errors: [], data: #Discuss.Topic<>, valid?: true>
+
+            iex> changeset = Discuss.Topic.changeset(%Discuss.Topic{})
+            iex> %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+            iex> errors
+            [title: {"can't be blank", [validation: :required]}]
 
     """
     def changeset(struct,params \\ %{}) do
+
+      IO.puts "Params is :"
+      IO.inspect params
+
       struct
-      |> cast(params,[:title])  # creates a changeset ( changes the database )
-      |> validate_required([:title]) # adds errors to changeset
+      |> cast(params,[:title])  # changes the database
+      |> validate_required([:title]) # adds errors to changeset if :title is not in the changes
 
     end
 end
