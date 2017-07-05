@@ -36,6 +36,18 @@ defmodule Discuss.TopicController do
 
 
     @doc """
+            ## Examples
+
+    """
+    def index(conn,_params) do
+
+        topics = Repo.all(Topic)
+
+        render conn, "index.html", topics: topics
+
+    end
+
+    @doc """
         Render page to create new topics
 
     """
@@ -66,17 +78,20 @@ defmodule Discuss.TopicController do
     """
     def create(conn,%{"topic" => topic}) do
 
-        IO.inspect conn
-
         case insert(topic) do
-          {:ok, post}       -> IO.inspect(post)
+          {:ok, post}       ->
+           %{"title" => title} = topic
+
+            conn
+            |> put_flash(:info, "Topic #{title} Created")
+            |> redirect(to: topic_path(conn, :index))
           {:error, changeset} ->
             IO.inspect changeset
             render conn, "new.html", changeset: changeset, dummy: "blaa"
         end
 
-        %{"title" => title} = topic
-        render conn, "create.html", title: title
+#
+#        render conn, "create.html", title: title
     end
 
     @doc """
@@ -93,7 +108,6 @@ defmodule Discuss.TopicController do
         changeset = Topic.changeset(%Topic{}, topic)
         Repo.insert(changeset)
     end
-
 
 end
 
