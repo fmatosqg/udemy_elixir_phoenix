@@ -1,3 +1,7 @@
+# Disclaimer 
+Source code written to follow udemy course https://www.udemy.com/the-complete-elixir-and-phoenix-bootcamp-and-tutorial
+
+
 # Discuss
 
 To start your Phoenix app:

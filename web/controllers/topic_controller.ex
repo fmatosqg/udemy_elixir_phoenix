@@ -39,7 +39,7 @@ defmodule Discuss.TopicController do
         Render page to create new topics
 
     """
-    def new(conn,params) do
+    def new(conn,_params) do
 
         changeset = Topic.changeset(%Topic{},%{})
 

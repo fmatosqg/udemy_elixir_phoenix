@@ -24,7 +24,7 @@ defmodule Discuss.TopicTest do
         params = %{title: ""}
         changeset = Discuss.Topic.changeset(struct,params)
 
-        %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+        %Ecto.Changeset{changes: _hooray, errors: errors} = changeset
 
         assert changeset.valid? == false
         assert errors == [title: {"can't be blank", [validation: :required]}]
@@ -36,7 +36,7 @@ defmodule Discuss.TopicTest do
         params = %{title: "    "}
         changeset = Discuss.Topic.changeset(struct,params)
 
-        %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+        %Ecto.Changeset{changes: _hooray, errors: errors} = changeset
 
         assert changeset.valid? == false
         assert errors == [title: {"can't be blank", [validation: :required]}]
@@ -45,10 +45,10 @@ defmodule Discuss.TopicTest do
 
       test "Make error if params is nil, but no crash" do
         struct = %Discuss.Topic{}
-        params = nil
+
         changeset = Discuss.Topic.changeset(struct)
 
-        %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+        %Ecto.Changeset{changes: _hooray, errors: errors} = changeset
 
         assert changeset.valid? == false
         assert errors == [title: {"can't be blank", [validation: :required]}]

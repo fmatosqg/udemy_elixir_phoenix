@@ -25,7 +25,7 @@ defmodule Discuss.Topic do
             #Ecto.Changeset<action: nil, changes: %{title: "Great"}, errors: [], data: #Discuss.Topic<>, valid?: true>
 
             iex> changeset = Discuss.Topic.changeset(%Discuss.Topic{})
-            iex> %Ecto.Changeset{changes: hooray, errors: errors} = changeset
+            iex> %Ecto.Changeset{changes: _hooray, errors: errors} = changeset
             iex> errors
             [title: {"can't be blank", [validation: :required]}]
 
