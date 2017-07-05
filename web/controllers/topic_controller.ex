@@ -59,23 +59,41 @@ defmodule Discuss.TopicController do
             ** (RuntimeError) a view module was not specified, set one with put_view/2
 
             iex> params = %{"topic" => %{"no_title" => "" } }
-            iex> Discuss.TopicController.create(%Plug.Conn{}, params)
-            ** (MatchError) no match of right hand side value: %{"no_title" => ""}
-
-            iex> params = %{"topic" => %{"no_title" => "" } }
             iex> %{"topic" => %{"title" => _title } } = params
             ** (MatchError) no match of right hand side value: %{"topic" => %{"no_title" => ""}}
 
 
     """
-    def create(conn,params) do
+    def create(conn,%{"topic" => topic}) do
 
-        %{"title" => topic} = get_parameters(params)
+        IO.inspect conn
 
-        IO.puts "Got a nice new topic #{topic}"
+        case insert(topic) do
+          {:ok, post}       -> IO.inspect(post)
+          {:error, changeset} ->
+            IO.inspect changeset
+            render conn, "new.html", changeset: changeset, dummy: "blaa"
+        end
 
-        render conn, "create.html", topic: topic
+        %{"title" => title} = topic
+        render conn, "create.html", title: title
     end
+
+    @doc """
+        ## Examples
+            iex> params = %{"topic" => %{"no_title" => "" } }
+            iex> res = Discuss.TopicController.insert(params)
+            iex> {:error,err_changeset} = res
+            iex> %Ecto.Changeset{ action: :insert, errors: errors }  = err_changeset
+            iex> errors
+            [title: {"can't be blank", [validation: :required]}]
+    """
+
+    def insert(topic) do
+        changeset = Topic.changeset(%Topic{}, topic)
+        Repo.insert(changeset)
+    end
+
 
 end
 

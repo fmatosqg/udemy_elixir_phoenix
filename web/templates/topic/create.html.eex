@@ -1,6 +1,6 @@
 <div>
     <div>
-        <%= @topic %> created successfully
+        <H5>Topic <%= @title %> created successfully</H5>
     </div>
     <div class="btn btn-primary">
         <a href="/topics/new">Create yet another</a>

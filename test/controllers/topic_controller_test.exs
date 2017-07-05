@@ -17,7 +17,7 @@ defmodule Discuss.TopicControllerTest do
   test "Nasty error matching expected" do
 
     params = %{"topic" => %{"no_title" => "" } }
-    assert catch_error( Discuss.TopicController.create(%Plug.Conn{}, params) ) == {:badmatch, %{"no_title" => ""}}
+    assert catch_error( Discuss.TopicController.create(%Plug.Conn{}, params) ) == %RuntimeError{message: "a view module was not specified, set one with put_view/2"}
    end
 
   test "Simplified error matching expected" do
