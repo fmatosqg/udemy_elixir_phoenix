@@ -13,18 +13,18 @@ defmodule Discuss.Router do
     plug :accepts, ["json"]
   end
 
+  @doc """
+  Determines all endpoints for the app
+  check the results with mix phoenix.routes
+  """
+
   scope "/", Discuss do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
     get "/wha", PageController, :wha
 
-    get  "/topics", TopicController, :index
-    get  "/topics/new", TopicController, :new
-    post "/topics", TopicController, :create
-
-    get "/topics/:id/edit", TopicController, :edit
-    put "/topics/:id/update", TopicController, :update
+    resources "/topics", TopicController
 
   end
 

@@ -5,11 +5,15 @@
 <ul class="collection">
     <%= for topic <- @topics do %>
     <li class="collection-item">
-        id <%= topic.id %> = <%= topic.title %>
+        <%= topic.id %> - 
+        <%= link topic.title, to: topic_path(@conn, :show, topic.id), class: ""  %>
 
-        <%= link to: topic_path(@conn, :edit, topic.id), class: "" do %>
-        edit
-        <% end %>
+
+        <div class="right">
+            <%= link "Edit", to: topic_path(@conn, :edit, topic.id), class: ""  %>
+            <%= link "Delete", to: topic_path(@conn, :delete, topic.id), method: :delete, class: ""  %>
+        </div>
+
     </li>
     <%= end %>
 </ul>

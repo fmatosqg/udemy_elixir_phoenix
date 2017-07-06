@@ -141,7 +141,7 @@ defmodule Discuss.TopicController do
           {:ok, _topic } ->
             %{"title" => title } = new_topic
             conn
-            |> put_flash(:info, "Topic edited to #{title}")
+            |> put_flash(:info, "Topic edited to '#{title}'")
             |> redirect(to: topic_path(conn, :index))
           {:error, changeset} ->
                 IO.inspect( changeset)
@@ -150,5 +150,35 @@ defmodule Discuss.TopicController do
 
     end
 
+    @doc """
+            ## Examples
+                iex> "example"
+                "example"
+    """
+    def delete(conn, %{"id" => topic_id }) do
+
+        IO.inspect topic_id
+        changeset =
+        Repo.get!(Topic, topic_id)
+        |> Repo.delete!
+
+        IO.inspect changeset
+        %Discuss.Topic{title: title} = changeset
+
+        conn
+        |> put_flash(:info, "Topic '#{title}'' Deleted")
+        |> redirect(to: topic_path(conn,:index))
+
+#        render conn, "delete.html", changeset: changeset
+    end
+
+    def show(conn, %{"id" => topic_id }) do
+
+        topic = Repo.get!(Topic, topic_id)
+
+#        IO.inspect topic
+        render conn, "show.html", topic: topic
+
+    end
 end
 

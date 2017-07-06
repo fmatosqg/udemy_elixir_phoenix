@@ -1,0 +1,7 @@
+show
+
+<div>
+Title is
+<%= %Discuss.Topic{title: title} = @topic
+    title %>
+</div>
