@@ -65,7 +65,7 @@ defmodule Discuss.TopicController do
         ## Examples
             iex> params = %{"_csrf_token" => "Gh8YKS4lPQY/ZhsIIQwPAypsOSwqEAAAkkRmKAk7SSNZR5aUGGAJOA==","_utf8" => "✓", "topic" => %{"title" => "aa"} }
             iex> Discuss.TopicController.create(%Plug.Conn{}, params)
-            ** (RuntimeError) a view module was not specified, set one with put_view/2
+            ** (ArgumentError) flash not fetched, call fetch_flash/2
 
             iex> params = %{"topic" => %{"title" => "" } }
             iex> Discuss.TopicController.create(%Plug.Conn{}, params)
@@ -112,8 +112,7 @@ defmodule Discuss.TopicController do
 
     @doc """
             ## Examples
-                iex> "example"
-                "example"
+
     """
     def edit(conn, %{"id" => topic_id }) do
         topic = Repo.get(Topic,topic_id)
@@ -126,8 +125,7 @@ defmodule Discuss.TopicController do
 
     @doc """
             ## Examples
-                iex> "example"
-                "example"
+
     """
     def update(conn, %{"id" => topic_id, "topic" => new_topic }) do
 
@@ -152,8 +150,6 @@ defmodule Discuss.TopicController do
 
     @doc """
             ## Examples
-                iex> "example"
-                "example"
     """
     def delete(conn, %{"id" => topic_id }) do
 

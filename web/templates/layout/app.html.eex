@@ -18,8 +18,15 @@
 
       <nav class="light-blue">
         <div class="nav-wrapper container">
-            <%= link "Discussions", to: topic_path(@conn, :index), class: class="brand-logo"  %>
+            <%= link "Discussions", to: topic_path(@conn, :index), class: "brand-logo"  %>
+            <div class="right">
+              <a href="/auth/github">
+                Login
+              </a>
+            </div>
         </div>
+
+
       </nav>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
