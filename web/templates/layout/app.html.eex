@@ -20,9 +20,14 @@
         <div class="nav-wrapper container">
             <%= link "Discussions", to: topic_path(@conn, :index), class: "brand-logo"  %>
             <div class="right">
-              <a href="/auth/github">
-                Login
-              </a>
+              <%= if @conn.assigns[:user] do %>
+                <li>
+                  <%= link "Logout", to: auth_path(@conn,:signout, "github") %>
+                  </li>
+              <% else %>
+                <%= link "Login with Github", to: auth_path(@conn,:request, "github") %>
+              <% end %>
+
             </div>
         </div>
 

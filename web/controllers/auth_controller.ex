@@ -5,7 +5,8 @@ defmodule Discuss.AuthController do
     alias Discuss.User
 
 
-    def callback(%{assigns: %{ueberauth_failure: auth}} = conn, params) do
+
+    def callback(%{assigns: %{ueberauth_failure: _auth}} = conn, _params) do
 
         IO.puts "Authentication failure"
         conn
@@ -15,16 +16,12 @@ defmodule Discuss.AuthController do
     end
 
     @doc """
+        Entry point for github login
             ## Examples
 
     """
-    def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
+    def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
 
-        IO.puts "=========================="
-        IO.inspect auth
-        IO.puts "=========================="
-        IO.inspect params
-        IO.puts "=========================="
 
         user_params = %{token: auth.credentials.token,
             email: auth.info.email,
@@ -36,9 +33,24 @@ defmodule Discuss.AuthController do
 
         {:ok, provider: username } = signin(conn,changeset)
 
+    end
 
+
+    @doc """
+        Entry point for logout
+            ## Examples
+                iex> "example"
+                "example"
+    """
+    def signout(conn,params) do
+
+        conn
+        |> configure_session(drop: true)
+        |> put_flash(:info, "Logged out")
+        |> redirect(to: topic_path(conn,:index) )
 
     end
+
 
     @doc """
         ## Examples
@@ -61,20 +73,18 @@ defmodule Discuss.AuthController do
     """
     def upsert_user(changeset) do
 
+        # should be get_by login:
         case Repo.get_by(User, email: changeset.changes.email) do
           nil ->  # insert
             Repo.insert(changeset)
           user ->  # update
-            {:ok, user}
+#            changeset.changes.id = user.id
+#            Repo.update(changeset)
+            {:ok,user}
         end
 
     end
 
-
-    @doc """
-            ## Examples
-
-    """
     defp signin(conn,changeset) do
         case upsert_user(changeset) do
             {:ok, user } ->
@@ -93,3 +103,4 @@ defmodule Discuss.AuthController do
     end
 
 end
+

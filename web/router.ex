@@ -7,6 +7,7 @@ defmodule Discuss.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Discuss.Plugs.SetUser
   end
 
   pipeline :api do
@@ -17,7 +18,6 @@ defmodule Discuss.Router do
   Determines all endpoints for the app
   check the results with mix phoenix.routes
   """
-
   scope "/", Discuss do
     pipe_through :browser # Use the default browser stack
 
@@ -33,6 +33,7 @@ defmodule Discuss.Router do
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
+    get "/:provider/signout", AuthController, :signout
   end
 
 
