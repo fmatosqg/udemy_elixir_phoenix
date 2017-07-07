@@ -4,6 +4,8 @@ defmodule Discuss.TopicController do
 
     alias Discuss.Topic
 
+    plug Discuss.Plugs.RequireAuth when action in [:new, :create, :edit, :update, :delete]
+    plug :check_post_owner when action in [:update, :edit, :delete]
 
     # this is for :new
     @doc """
@@ -79,7 +81,8 @@ defmodule Discuss.TopicController do
     """
     def create(conn,%{"topic" => topic}) do
 
-        case insert(topic) do
+
+        case insert(conn,topic) do
           {:ok, _post}       ->
            %{"title" => title} = topic
 
@@ -91,8 +94,6 @@ defmodule Discuss.TopicController do
             render conn, "new.html", changeset: changeset, dummy: "blaa"
         end
 
-#
-#        render conn, "create.html", title: title
     end
 
     @doc """
@@ -105,8 +106,18 @@ defmodule Discuss.TopicController do
             [title: {"can't be blank", [validation: :required]}]
     """
 
-    def insert(topic) do
-        changeset = Topic.changeset(%Topic{}, topic)
+    defp insert(conn,topic) do
+
+        # to get the user do either
+        # conn.assigns[:user] or
+        # conn.assigns.user
+
+        changeset = conn.assigns.user
+            |> build_assoc(:topics)
+            |> Topic.changeset(topic)
+
+
+#        changeset = Topic.changeset(%Topic{}, topic)
         Repo.insert(changeset)
     end
 
@@ -129,9 +140,6 @@ defmodule Discuss.TopicController do
     """
     def update(conn, %{"id" => topic_id, "topic" => new_topic }) do
 
-
-        IO.puts("aaaaaaa")
-
         changeset = Repo.get(Topic,topic_id)
         |> Topic.changeset(new_topic)
 
@@ -153,28 +161,43 @@ defmodule Discuss.TopicController do
     """
     def delete(conn, %{"id" => topic_id }) do
 
-        IO.inspect topic_id
         changeset =
-        Repo.get!(Topic, topic_id)
-        |> Repo.delete!
+            Repo.get!(Topic, topic_id)
+            |> Repo.delete!
 
-        IO.inspect changeset
         %Discuss.Topic{title: title} = changeset
 
         conn
         |> put_flash(:info, "Topic '#{title}'' Deleted")
         |> redirect(to: topic_path(conn,:index))
 
-#        render conn, "delete.html", changeset: changeset
     end
 
     def show(conn, %{"id" => topic_id }) do
 
         topic = Repo.get!(Topic, topic_id)
 
-#        IO.inspect topic
         render conn, "show.html", topic: topic
 
+    end
+
+    @doc """
+        Plug to check if the current user owns a specific post
+            ## Examples
+                iex> "example"
+                "example"
+    """
+    def check_post_owner(conn, _params) do
+        %{params: %{"id" => topic_id}} = conn
+
+        if Repo.get(Topic, topic_id).user_id == conn.assigns.user.id do
+          conn
+        else
+            conn
+            |> put_flash(:error, "Can't touch this'")
+            |> redirect(to: topic_path(conn,:index))
+            |> halt()
+        end
     end
 end
 

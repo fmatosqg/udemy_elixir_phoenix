@@ -10,6 +10,8 @@ defmodule Discuss.Topic do
     """
     schema "topics" do
       field :title, :string
+
+      belongs_to :user, Discuss.User
     end
 
     @doc """
@@ -31,9 +33,6 @@ defmodule Discuss.Topic do
 
     """
     def changeset(struct,params \\ %{}) do
-
-      IO.puts "Params is :"
-      IO.inspect params
 
       struct
       |> cast(params,[:title])  # changes the database

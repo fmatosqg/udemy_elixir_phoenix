@@ -78,8 +78,6 @@ defmodule Discuss.AuthController do
           nil ->  # insert
             Repo.insert(changeset)
           user ->  # update
-#            changeset.changes.id = user.id
-#            Repo.update(changeset)
             {:ok,user}
         end
 

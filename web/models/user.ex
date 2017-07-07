@@ -8,6 +8,8 @@ defmodule Discuss.User do
       field :login, :string
       field :github_id, :string
 
+      has_many :topics, Discuss.Topic
+
       timestamps()
     end
 
